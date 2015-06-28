@@ -12,10 +12,8 @@ def onPath(x,y):
     angle = 0.5*math.pi - math.atan2(y, x)
     if angle > 1.31:
         angle = 1.31
-        a_x = 0
     elif angle < -1.31:
         angle = -1.31
-        a_x = 0
     x = length*math.sin(angle)
     y = pivot_y + length*math.cos(angle)
     return (x, y)
