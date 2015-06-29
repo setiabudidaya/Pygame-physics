@@ -2,20 +2,14 @@ import math
 import time
 import pygame
 
-def solidCircle(size, x, y):
-    for dx in range(2, size):
-        pygame.draw.circle(screen, (255, 0, 0), (int(x), int(y)), dx, 2)
-
 def onPath(x,y):
     length = 250
     pivot_y = 40
     angle = 0.5*math.pi - math.atan2(y, x)
     if angle > 1.31:
         angle = 1.31
-        a_x = 0
     elif angle < -1.31:
         angle = -1.31
-        a_x = 0
     x = length*math.sin(angle)
     y = pivot_y + length*math.cos(angle)
     return (x, y)
@@ -91,7 +85,7 @@ if __name__ == "__main__":
 
         pygame.draw.line(screen, (0,0,255), (pivot_x, pivot_y),
                          (pivot_x + x, y), 3)
-        solidCircle(20, pivot_x+x, y)
+        pygame.draw.circle(screen, (255, 0, 0), (int(x + pivot_x), int(y)), 25, 0)
 
         pygame.display.flip()
         time.sleep(dt)
