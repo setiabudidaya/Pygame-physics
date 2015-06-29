@@ -14,7 +14,12 @@ def onPath(a, b, length, pivot_y):
         angle = 0.48*math.pi
     x = length*math.sin(angle)
     y = pivot_y + length*math.cos(angle)
-    return (x, y)        
+    return (x, y)
+
+def collide(p1, p2):
+    if math.hypot(p1.x - p2.x, p1.y - p2.y) < 50:
+        p1.v_x = (p1.mass/p2.mass)*p2.v_x
+        p2.v_x = (p2.mass/p1.mass)*p1.v_x
     
 class Pendulum():
     def __init__(self, angle, pivot_x, pivot_y):
@@ -26,7 +31,7 @@ class Pendulum():
         self.y = self.length*math.cos(self.angle)
         self.v_x = 0
         self.a_x = 0
-        self.selected = False
+        self.ID = None
         self.mass = 1
 
     def swing(self):
@@ -54,9 +59,12 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Pendulum")
     my_pendulums = [Pendulum(0, 300, 40), Pendulum(0, 350, 40), Pendulum(0, 400, 40)]
+    for i, p in enumerate(my_pendulums):
+        p.ID = i
 
     running = True
-    selected = False
+    selected = None
+
     while running:
         screen.fill(background_colour)
         pygame.draw.line(screen, (0,0,255), (120, 40),
@@ -66,28 +74,31 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 running = False
 
-        for i, p in enumerate(my_pendulums):
+        for p in my_pendulums:
             if pygame.mouse.get_pressed() == (1,0,0):
                 (mouseX, mouseY) = pygame.mouse.get_pos()
                 a = mouseX - p.pivot_x
                 b = mouseY - p.pivot_y
                 if dist(a, b, p.x, p.y) < 40:
+                    if selected == None:
+                        selected = p.ID
+                        (p.x, p.y) = onPath(a, b, p.length, p.pivot_y)
+                        p.v_x = 0
+                elif selected == p.ID:
                     (p.x, p.y) = onPath(a, b, p.length, p.pivot_y)
-                    p.selected = True
-                elif p.selected == True:
-                    (p.x, p.y) = onPath(a, b, p.length, p.pivot_y)
-                p.draw()
-
-            if event.type == pygame.MOUSEBUTTONUP:
-                if selected == True:
                     p.v_x = 0
-                p.selected = False
-                    
-            if pygame.mouse.get_pressed() == (0,0,0) or p.selected == False:
-                p.swing()
-                p.draw()
+                
+            if event.type == pygame.MOUSEBUTTONUP:
+                if selected == p.ID:
+                    p.v_x = 0
+                selected = None
 
-        time.sleep(0.5*0.01)
+            if selected != p.ID:         
+                p.swing()
+
+            p.draw()
+
+        time.sleep(0.4*0.01)
         pygame.display.flip()
 
     pygame.quit()
