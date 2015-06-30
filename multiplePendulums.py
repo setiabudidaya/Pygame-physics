@@ -17,10 +17,16 @@ def onPath(a, b, length, pivot_y):
     return (x, y)
 
 def collide(p1, p2):
-    if math.hypot(p1.x - p2.x, p1.y - p2.y) < 50:
-        p1.v_x = (p1.mass/p2.mass)*p2.v_x
-        p2.v_x = (p2.mass/p1.mass)*p1.v_x
-    
+    """Check if 2 pendulums have collided and if so alter v_x"""
+    if dist(p1.x + p1.pivot_x, p1.y, p2.x + p2.pivot_x, p2.y) < 50:
+       (p1.v_x, p2.v_x) = (p2.v_x, p1.v_x)
+       if p1.x < p2.x:
+           p2.x - 3
+           p2.x + 3
+       if p1.x > p2.x:
+           p1.x + 3
+           p2.x - 3
+           
 class Pendulum():
     def __init__(self, angle, pivot_x, pivot_y):
         self.pivot_x = pivot_x
@@ -58,13 +64,13 @@ if __name__ == "__main__":
     background_colour = (255,255,255)
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Pendulum")
-    my_pendulums = [Pendulum(0, 300, 40), Pendulum(0, 350, 40), Pendulum(0, 400, 40)]
+    my_pendulums = [Pendulum(0, 250, 40), Pendulum(0, 300, 40), Pendulum(0, 350, 40), Pendulum(0, 400, 40)]
     for i, p in enumerate(my_pendulums):
         p.ID = i
+    numPen = len(my_pendulums)
 
     running = True
     selected = None
-
     while running:
         screen.fill(background_colour)
         pygame.draw.line(screen, (0,0,255), (120, 40),
@@ -87,15 +93,21 @@ if __name__ == "__main__":
                 elif selected == p.ID:
                     (p.x, p.y) = onPath(a, b, p.length, p.pivot_y)
                     p.v_x = 0
-                
+                if p.ID < numPen-1:
+                    for i in range(p.ID, numPen-1):
+                        collide(my_pendulums[p.ID], my_pendulums[i+1])
+                    
             if event.type == pygame.MOUSEBUTTONUP:
                 if selected == p.ID:
                     p.v_x = 0
                 selected = None
 
+            if p.ID < numPen-1:
+                for i in range(p.ID, numPen-1):
+                    collide(my_pendulums[p.ID], my_pendulums[i+1])
+
             if selected != p.ID:         
                 p.swing()
-
             p.draw()
 
         time.sleep(0.4*0.01)
