@@ -43,7 +43,7 @@ def dist(a, b, x, y):
 
 def onPath(a, b, length, pivot_y):
     """
-    Move coordinates (a, b) yo closest point on path of the pendulum
+    Move coordinates (a, b) to closest point on path of the pendulum
     Used to ensure pendulum sticks to it's path when it's selected 
     i.e. it doesn't just follow the mouse position
     x"""
@@ -60,8 +60,9 @@ def collide(p1, p2):
     """Check if 2 pendulums have collided and if so alter v_x"""
     # If centre to centre distance < bobSize they have collided
     if dist(p1.x + p1.pivot_x, p1.y, p2.x + p2.pivot_x, p2.y) < 50:
-        # Assume totally elastic collision
+        # Assume totally elastic collision i.e.i swap velocities
         (p1.v_x, p2.v_x) = (p2.v_x, p1.v_x)
+        # move the pendulums slightly apert to avoid 'sticking'
         if p1.x < p2.x:
             p2.x - 3
             p2.x + 3
