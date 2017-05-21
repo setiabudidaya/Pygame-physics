@@ -1,8 +1,7 @@
 import pygame
 import math
 import time
-from Pendulum import Pendulum, dist, onPath, collide
-        
+from Pendulum import Pendulum, dist, onPath, collide        
 
 if __name__ == "__main__":
     # Define pygame variables
@@ -19,7 +18,7 @@ if __name__ == "__main__":
                       Pendulum(0, 350, 40), 
                       Pendulum(0, 400, 40)]
 
-    # Assign an ide to each pendulum                   
+    # Assign an id to each pendulum                   
     for i, p in enumerate(pendulum_stack): 
         p.ID = i
 
