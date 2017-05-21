@@ -36,28 +36,35 @@ class Pendulum():
                            bobSize, 0)
 
 
-
 def dist(a, b, x, y):
     """Return distance between 2 points"""
     d = math.hypot(a-x, b-y)
     return d
 
 def onPath(a, b, length, pivot_y):
-    """Move coordinates onto the path of the pendulum"""
+    """
+    Move coordinates (a, b) yo closest point on path of the pendulum
+    Used to ensure pendulum sticks to it's path when it's selected 
+    i.e. it doesn't just follow the mouse position
+    x"""
+
     angle = 0.5*math.pi - math.atan2(b, a)
+    # Limit the range of motion to 0.48pi radians either side of rest
     if math.fabs(angle) > 0.48*math.pi:
         angle = 0.48*math.pi
-    x = length*math.sin(angle)
-    y = pivot_y + length*math.cos(angle)
-    return (x, y)
+    x = round(length*math.sin(angle))
+    y = round(pivot_y + length*math.cos(angle))
+    return (int(x), int(y))
 
 def collide(p1, p2):
     """Check if 2 pendulums have collided and if so alter v_x"""
+    # If centre to centre distance < bobSize they have collided
     if dist(p1.x + p1.pivot_x, p1.y, p2.x + p2.pivot_x, p2.y) < 50:
-       (p1.v_x, p2.v_x) = (p2.v_x, p1.v_x)
-       if p1.x < p2.x:
-           p2.x - 3
-           p2.x + 3
-       if p1.x > p2.x:
-           p1.x + 3
-           p2.x - 3
+        # Assume totally elastic collision
+        (p1.v_x, p2.v_x) = (p2.v_x, p1.v_x)
+        if p1.x < p2.x:
+            p2.x - 3
+            p2.x + 3
+        else: 
+            p1.x + 3
+            p2.x - 3
