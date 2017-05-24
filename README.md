@@ -2,10 +2,6 @@
 
 This project provides a pendulum class and an example of how instances of this class can be used to simulate a Netwon's cradle in with pygame.
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
 
 ### Install and run
 
@@ -17,16 +13,15 @@ Or, seeing as you pygame is the only requirement, you could install it in your p
 
 Once the required packages are installed, run the newtons cradle simulation and try iy out!
 ```
-python multiplePendulums.py
+python NewtonsCradle.py
 ```
 
 ## Running the tests
 
-All tests for this application are confined to a single file. To run them
+All tests for this application are confined to a single file. They test the Pendulum behavior methods defined in Pendulum.py. To run them
 ```
 python unitTest.py
 ```
-
 
 ## Built With
 
